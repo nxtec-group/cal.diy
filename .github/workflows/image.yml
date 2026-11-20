@@ -1,0 +1,209 @@
+# NXTEC: imagen de cal.diy para https://calendar.nxtec.es.
+# Compila con el Dockerfile oficial, prueba el contenedor contra un Postgres 16 desechable, pasa Trivy y,
+# manual o con una etiqueta nxtec-*, publica en ghcr.io/nxtec-group/cal-diy. En una PR solo compila y prueba.
+name: "NXTEC image"
+
+on:
+  workflow_dispatch:
+    inputs:
+      push-image:
+        description: "Publicar la imagen en GHCR"
+        type: boolean
+        default: true
+  push:
+    tags:
+      - "nxtec-*"
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: image-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  IMAGE: ghcr.io/nxtec-group/cal-diy
+  WEBAPP_URL: https://calendar.nxtec.es
+  APP_NAME: NXTEC
+  SUPPORT_MAIL: angel.nxtec@gmail.com
+  SENDER_NAME: NXTEC
+  # Solo existen en CI: la BD desechable del servicio y los valores que exige `next build`.
+  # Van como ARG de la etapa de compilación y no llegan a la imagen final (se comprueba abajo).
+  CI_DATABASE_URL: postgresql://calcom:ci-only@localhost:5432/calendso
+  CI_BUILD_PLACEHOLDER: ci-build-only-not-a-secret
+  TRIVY_VERSION: "0.76.1"
+  TRIVY_SHA256: c7cbe3137fb8a48a17574bede3dd6beb16742d1e9772929940fc90082c39d9c0
+
+jobs:
+  image:
+    name: Build, humo, Trivy y publicación
+    runs-on: ubuntu-24.04
+    timeout-minutes: 150
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: calcom
+          POSTGRES_PASSWORD: ci-only
+          POSTGRES_DB: calendso
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U calcom -d calendso"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    steps:
+      - name: Liberar disco
+        run: |
+          df -h /
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost
+          docker image prune -af >/dev/null
+          df -h /
+
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          fetch-depth: 200
+
+      - name: Etiqueta <sha upstream 8>-<sha fork 8>
+        id: meta
+        run: |
+          FORK_SHA="${{ github.event.pull_request.head.sha || github.sha }}"
+          git fetch --no-tags --depth=200 origin +refs/heads/upstream:refs/remotes/origin/upstream
+          UPSTREAM_SHA=$(git merge-base HEAD origin/upstream)
+          TAG="${UPSTREAM_SHA:0:8}-${FORK_SHA:0:8}"
+          echo "upstream_sha=$UPSTREAM_SHA" >> "$GITHUB_OUTPUT"
+          echo "fork_sha=$FORK_SHA" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "upstream $UPSTREAM_SHA · fork $FORK_SHA · etiqueta $TAG"
+
+      - name: Build con el Dockerfile oficial
+        env:
+          TAG: ${{ steps.meta.outputs.tag }}
+          UPSTREAM_SHA: ${{ steps.meta.outputs.upstream_sha }}
+          FORK_SHA: ${{ steps.meta.outputs.fork_sha }}
+        run: |
+          # --network host: la compilación ve la BD de CI en localhost:5432, como el release-docker de upstream.
+          docker build --network host \
+            --build-arg NEXT_PUBLIC_WEBAPP_URL="$WEBAPP_URL" \
+            --build-arg NEXT_PUBLIC_LICENSE_CONSENT=agree \
+            --build-arg NEXT_PUBLIC_DISABLE_SIGNUP=true \
+            --build-arg NEXT_PUBLIC_APP_NAME="$APP_NAME" \
+            --build-arg NEXT_PUBLIC_SUPPORT_MAIL_ADDRESS="$SUPPORT_MAIL" \
+            --build-arg NEXT_PUBLIC_SENDGRID_SENDER_NAME="$SENDER_NAME" \
+            --build-arg CALCOM_TELEMETRY_DISABLED=1 \
+            --build-arg DATABASE_URL="$CI_DATABASE_URL" \
+            --build-arg NEXTAUTH_SECRET="$CI_BUILD_PLACEHOLDER" \
+            --build-arg CALENDSO_ENCRYPTION_KEY="$CI_BUILD_PLACEHOLDER" \
+            --label org.opencontainers.image.source=https://github.com/nxtec-group/cal.diy \
+            --label org.opencontainers.image.revision="$FORK_SHA" \
+            --label org.opencontainers.image.version="$TAG" \
+            --label org.opencontainers.image.title="cal.diy NXTEC" \
+            --label es.nxtec.upstream.revision="$UPSTREAM_SHA" \
+            -t "$IMAGE:$TAG" .
+          docker image ls "$IMAGE"
+
+      - name: Los valores de compilación no están en la imagen final
+        env:
+          TAG: ${{ steps.meta.outputs.tag }}
+        run: |
+          set -o pipefail
+          docker image inspect "$IMAGE:$TAG" --format '{{json .Config.Env}}' | tr ',' '\n' > env.txt
+          if grep -E '"(DATABASE_URL|DATABASE_DIRECT_URL|NEXTAUTH_SECRET|CALENDSO_ENCRYPTION_KEY)=' env.txt; then
+            echo "::error::la imagen final trae variables de compilación"; exit 1
+          fi
+          grep -E 'NEXT_PUBLIC_DISABLE_SIGNUP=true|CALCOM_TELEMETRY_DISABLED=1|NEXT_PUBLIC_APP_NAME=NXTEC' env.txt
+          if docker history --no-trunc "$IMAGE:$TAG" | grep -F -e "$CI_BUILD_PLACEHOLDER" -e "ci-only@"; then
+            echo "::error::el historial de la imagen trae valores de compilación"; exit 1
+          fi
+          FOUND=$(docker run --rm --entrypoint sh "$IMAGE:$TAG" -c "grep -rlF '$CI_BUILD_PLACEHOLDER' /calcom/apps/web/.next 2>/dev/null | head -5" || true)
+          if [ -n "$FOUND" ]; then
+            echo "::error::el valor de compilación está incrustado en: $FOUND"; exit 1
+          fi
+          echo "sin valores de compilación en Env, historial ni .next"
+
+      - name: Humo contra la BD de CI
+        env:
+          TAG: ${{ steps.meta.outputs.tag }}
+        run: |
+          docker run -d --name calcom-smoke --network host \
+            -e DATABASE_URL="$CI_DATABASE_URL" \
+            -e DATABASE_DIRECT_URL="$CI_DATABASE_URL" \
+            -e DATABASE_HOST=localhost:5432 \
+            -e NEXTAUTH_URL="$WEBAPP_URL" \
+            -e NEXTAUTH_SECRET="$(openssl rand -base64 32)" \
+            -e CALENDSO_ENCRYPTION_KEY="$(openssl rand -hex 16)" \
+            "$IMAGE:$TAG"
+
+          ok=""
+          for i in $(seq 1 90); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3000/api/version || true)
+            if [ "$code" = "200" ]; then ok=1; break; fi
+            if [ "$(docker inspect -f '{{.State.Running}}' calcom-smoke)" != "true" ]; then break; fi
+            sleep 10
+          done
+          if [ -z "$ok" ]; then docker logs --tail 200 calcom-smoke; echo "::error::/api/version no respondió 200"; exit 1; fi
+
+          fail=0
+          check() { # nombre, código obtenido, códigos válidos
+            case " $3 " in *" $2 "*) echo "OK   $1 -> $2";; *) echo "FALLO $1 -> $2 (esperado: $3)"; fail=1;; esac
+          }
+          echo "version: $(curl -s http://127.0.0.1:3000/api/version)"
+          check "GET /api/version" "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3000/api/version)" "200"
+          check "GET /auth/login" "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3000/auth/login)" "200"
+          signup=$(curl -s -o /dev/null -w '%{http_code} %header{location}' http://127.0.0.1:3000/signup)
+          echo "GET /signup -> $signup"
+          case "$signup" in
+            30[1278]\ *auth/error*|404\ *|403\ *) echo "OK   /signup cerrado";;
+            *) echo "FALLO /signup no redirige a /auth/error ni da 404/403"; fail=1;;
+          esac
+          check "POST /api/auth/signup" "$(curl -s -o /dev/null -w '%{http_code}' -X POST -H 'Content-Type: application/json' \
+            -d '{"username":"humo","email":"humo@example.com","password":"Humo-ci-2026!x"}' http://127.0.0.1:3000/api/auth/signup)" "403"
+
+          if [ "$fail" != 0 ]; then docker logs --tail 200 calcom-smoke; exit 1; fi
+          docker rm -f calcom-smoke >/dev/null
+
+      - name: Trivy (falla solo con CRITICAL con arreglo)
+        env:
+          TAG: ${{ steps.meta.outputs.tag }}
+        run: |
+          curl -sSfL -o trivy.tgz "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz"
+          echo "${TRIVY_SHA256}  trivy.tgz" | sha256sum -c -
+          tar -xzf trivy.tgz trivy
+          ./trivy image --scanners vuln --timeout 30m --format json -o trivy.json "$IMAGE:$TAG"
+          ./trivy convert --format table -o trivy-report.txt trivy.json
+          jq -r '[.Results[]?.Vulnerabilities[]?] | group_by(.Severity) | map("\(.[0].Severity): \(length)") | .[]' trivy.json | tee trivy-summary.txt
+          CRIT_FIX=$(jq '[.Results[]?.Vulnerabilities[]? | select(.Severity=="CRITICAL" and (.FixedVersion // "") != "")] | length' trivy.json)
+          { echo "### Trivy"; echo; sed 's/^/- /' trivy-summary.txt; echo "- CRITICAL con arreglo: $CRIT_FIX"; } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$CRIT_FIX" != "0" ]; then
+            jq -r '.Results[]? | .Target as $t | .Vulnerabilities[]? | select(.Severity=="CRITICAL" and (.FixedVersion // "") != "") | "\($t) \(.PkgName) \(.InstalledVersion) -> \(.FixedVersion) \(.VulnerabilityID)"' trivy.json
+            echo "::error::$CRIT_FIX vulnerabilidades CRITICAL con arreglo disponible"; exit 1
+          fi
+
+      - name: Informe de Trivy
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: trivy-${{ steps.meta.outputs.tag }}
+          path: |
+            trivy-report.txt
+            trivy-summary.txt
+          if-no-files-found: ignore
+
+      - name: Publicar en GHCR
+        if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.push-image)
+        env:
+          TAG: ${{ steps.meta.outputs.tag }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "$GHCR_TOKEN" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          docker push "$IMAGE:$TAG"
+          DIGEST=$(docker image inspect "$IMAGE:$TAG" --format '{{range .RepoDigests}}{{println .}}{{end}}' | grep "^$IMAGE@" | head -1)
+          echo "publicada $IMAGE:$TAG"
+          echo "digest $DIGEST"
+          { echo "### Imagen"; echo; echo "- etiqueta: \`$IMAGE:$TAG\`"; echo "- digest: \`$DIGEST\`"; } >> "$GITHUB_STEP_SUMMARY"
+          docker logout ghcr.io
