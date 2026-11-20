@@ -88,7 +88,7 @@ FROM node:22 AS runner
 WORKDIR /calcom
 
 # NXTEC: parches de seguridad de Debian en la imagen final (Trivy pide linux-libc-dev al día, entre otros).
-RUN apt-get update && apt-get -y upgrade && apt-get install -y --no-install-recommends netcat-openbsd wget \n  && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get -y upgrade && apt-get install -y --no-install-recommends netcat-openbsd wget && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder-two /calcom ./
 
