@@ -87,9 +87,14 @@ FROM node:22 AS runner
 
 WORKDIR /calcom
 
-RUN apt-get update && apt-get install -y --no-install-recommends netcat-openbsd wget && rm -rf /var/lib/apt/lists/*
+# NXTEC: parches de seguridad de Debian en la imagen final (Trivy pide linux-libc-dev al día, entre otros).
+RUN apt-get update && apt-get -y upgrade && apt-get install -y --no-install-recommends netcat-openbsd wget \n  && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder-two /calcom ./
+
+# NXTEC: fuera los binarios de herramientas de compilación que no se ejecutan en producción y traen CVE
+# críticas de Go (CLI de Depot y binarios de esbuild). Si algo los necesitara al arrancar, el humo del CI lo detecta.
+RUN rm -rf node_modules/@depot node_modules/@esbuild node_modules/trigger.dev/node_modules/@esbuild
 ARG NEXT_PUBLIC_WEBAPP_URL=http://localhost:3000
 ENV NEXT_PUBLIC_WEBAPP_URL=$NEXT_PUBLIC_WEBAPP_URL \
   BUILT_NEXT_PUBLIC_WEBAPP_URL=$NEXT_PUBLIC_WEBAPP_URL
