@@ -154,7 +154,13 @@ jobs:
           }
           echo "version: $(curl -s http://127.0.0.1:3000/api/version)"
           check "GET /api/version" "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3000/api/version)" "200"
-          check "GET /auth/login" "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3000/auth/login)" "200"
+          # Con la BD vacía, Cal manda el login a /auth/setup para crear el primer administrador.
+          login=$(curl -s -o /dev/null -w '%{http_code} %header{location}' http://127.0.0.1:3000/auth/login)
+          echo "GET /auth/login -> $login"
+          case "$login" in
+            200\ *|30[1278]\ */auth/setup*) echo "OK   /auth/login";;
+            *) echo "FALLO /auth/login no da 200 ni lleva a /auth/setup"; fail=1;;
+          esac
           signup=$(curl -s -o /dev/null -w '%{http_code} %header{location}' http://127.0.0.1:3000/signup)
           echo "GET /signup -> $signup"
           case "$signup" in
