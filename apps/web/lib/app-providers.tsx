@@ -241,6 +241,7 @@ function getThemeProviderProps({
     forcedTheme,
     themeSupport,
     enableColorScheme: false,
+    defaultTheme: themeSupport === ThemeSupport.None ? undefined : "dark",
     enableSystem: themeSupport !== ThemeSupport.None,
     // next-themes doesn't listen to changes on storageKey. So we need to force a re-render when storageKey changes
     // This is how login to dashboard soft navigation changes theme from light to dark

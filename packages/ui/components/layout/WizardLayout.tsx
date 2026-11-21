@@ -9,6 +9,7 @@ import { APP_NAME } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 
 import { Button } from "../../components/button/Button";
+import { Logo } from "../../components/logo";
 import { StepCard } from "../../components/card/StepCard";
 import { Steps } from "../../components/form/step/Steps";
 import { SkeletonText } from "../../components/skeleton/Skeleton";
@@ -39,11 +40,12 @@ export function WizardLayout({
       <div>
         <Toaster position="bottom-right" />
       </div>
-      <div className="mx-auto px-4 py-24">
+      <div className="mx-auto flex min-h-screen flex-col justify-center px-4 py-12 sm:py-24">
         <div className="relative">
           <div className="sm:mx-auto sm:w-full sm:max-w-[600px]">
             <div className="mx-auto sm:max-w-[520px]">
-              <header>
+              <Logo inline={false} className="mb-10 flex justify-center" />
+              <header className="text-center">
                 {isLocaleReady ? (
                   <>
                     <p className="font-cal mb-3 text-[28px] font-medium leading-7">
