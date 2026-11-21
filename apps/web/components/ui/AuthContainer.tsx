@@ -13,7 +13,7 @@ interface Props {
 
 export default function AuthContainer(props: React.PropsWithChildren<Props>) {
   return (
-    <div className="bg-default flex min-h-screen flex-col items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+    <div className="nx-auth flex min-h-screen flex-col items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
       {props.showLogo && <Logo inline={false} className="mx-auto mb-10" />}
 
       <div className={classNames(props.showLogo ? "text-center" : "", "sm:mx-auto sm:w-full sm:max-w-md")}>
@@ -25,7 +25,7 @@ export default function AuthContainer(props: React.PropsWithChildren<Props>) {
         </div>
       )}
       <div className="mt-8 w-full sm:mx-auto sm:max-w-md">
-        <div className="bg-default dark:bg-cal-muted border-subtle rounded-2xl border px-4 py-10 sm:px-10">
+        <div className="nx-card px-4 py-10 sm:px-10">
           {props.children}
         </div>
         <div className="text-default mt-8 text-center text-sm">{props.footerText}</div>

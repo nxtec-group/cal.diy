@@ -36,7 +36,7 @@ export function WizardLayout({
   }, [pathname]);
 
   return (
-    <div className="bg-default text-emphasis min-h-screen" data-testid="onboarding">
+    <div className="nx-auth text-emphasis min-h-screen" data-testid="onboarding">
       <div>
         <Toaster position="bottom-right" />
       </div>
