@@ -1,0 +1,214 @@
+/*
+ * NXTEC sobre Cal: la identidad de nxtec.es (Poppins, fondo #0d0e11, azul #4c93ff).
+ * Va la última en globals.css y casi solo redefine variables, para que las actualizaciones de Cal no
+ * choquen con la marca. Las reglas sobre elementos van en @layer base: son el valor por defecto y las
+ * utilidades de Tailwind (en @layer utilities) siguen mandando. Revisión de OMC: PR #4.
+ */
+
+/* Poppins (OFL, Google Fonts): licencia en /fonts/nxtec/LICENSE-Poppins-OFL.txt. */
+@font-face {
+  font-family: "Poppins";
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/nxtec/Poppins-400-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/nxtec/Poppins-400-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/nxtec/Poppins-500-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/nxtec/Poppins-500-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/nxtec/Poppins-600-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/nxtec/Poppins-600-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/nxtec/Poppins-700-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/nxtec/Poppins-700-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* Tipografía: Cal fija --font-sans y --font-cal en línea desde app/layout.tsx; html:root gana a :root. */
+html:root {
+  --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-cal: "Poppins", ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  --nx-blue: #4c93ff;
+  --nx-blue-deep: #1f6fe0;
+  --nx-blue-deeper: #1a5fc2;
+  --nx-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+
+  /* Botón principal: blanco sobre #1f6fe0 (4,76:1) y #1a5fc2 al pasar (6,07:1), AA en los dos temas. */
+  --primary: var(--nx-blue-deep);
+  --primary-foreground: #ffffff;
+  --nx-cta-hover: var(--nx-blue-deeper);
+  --ring: var(--nx-blue-deep);
+
+  /* Tarjeta y fondo de las pantallas de acceso en tema claro (si alguien lo elige). */
+  --nx-card-bg: #ffffff;
+  --nx-card-border: rgba(13, 14, 17, 0.08);
+  --nx-halo-1: rgba(31, 111, 224, 0.1);
+  --nx-halo-2: rgba(76, 147, 255, 0.08);
+}
+
+.dark {
+  /* Componentes nuevos (coss-ui). */
+  --background: #0d0e11;
+  --foreground: #f5f5f7;
+  --card: #16171b;
+  --card-foreground: #f5f5f7;
+  --popover: #1f2025;
+  --popover-foreground: #f5f5f7;
+  --primary: var(--nx-blue-deep);
+  --primary-foreground: #ffffff;
+  --secondary: rgba(255, 255, 255, 0.05);
+  --secondary-foreground: #f5f5f7;
+  --muted: rgba(255, 255, 255, 0.05);
+  --muted-foreground: #a9a9b0;
+  --accent: rgba(76, 147, 255, 0.12);
+  --accent-foreground: #f5f5f7;
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.24);
+  --ring: var(--nx-blue);
+  --sidebar: #0d0e11;
+
+  /* Tokens clásicos de Cal. --cal-text-inverted no se toca: en oscuro es negro sobre fondo claro
+     (tooltips y avisos); ponerlo en blanco los dejaba blanco sobre blanco. */
+  --cal-bg: #0d0e11;
+  --cal-bg-muted: #16171b;
+  --cal-bg-subtle: #1f2025;
+  --cal-bg-emphasis: #2a2b31;
+  --cal-bg-primary: var(--nx-blue);
+  --cal-bg-primary-emphasis: #5aa2ff;
+  --cal-bg-primary-muted: rgba(76, 147, 255, 0.12);
+  --cal-bg-brand: var(--nx-blue);
+  --cal-bg-brand-emphasis: #5aa2ff;
+  --cal-bg-brand-muted: rgba(76, 147, 255, 0.12);
+  --cal-border: rgba(255, 255, 255, 0.14);
+  --cal-border-emphasis: rgba(255, 255, 255, 0.24);
+  --cal-border-subtle: rgba(255, 255, 255, 0.08);
+  --cal-border-muted: rgba(255, 255, 255, 0.05);
+  --cal-text-emphasis: #f5f5f7;
+  --cal-text: #d6d6dc;
+  --cal-text-subtle: #a9a9b0;
+  --cal-text-muted: #9a9aa2;
+
+  --nx-card-bg: rgba(31, 32, 37, 0.72);
+  --nx-card-border: rgba(255, 255, 255, 0.08);
+  --nx-halo-1: rgba(31, 111, 224, 0.18);
+  --nx-halo-2: rgba(11, 45, 107, 0.3);
+}
+
+@layer base {
+  /* Titulares como en nxtec.es: 500 con tracking negativo, salvo que la utilidad diga otra cosa. */
+  h1,
+  h2 {
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+
+  /* Respuesta al pulsar en los botones (Emil Kowalski: 0.97, 160 ms, ease-out). */
+  [data-slot="button"],
+  .nx-cta {
+    transition-property: transform, background-color, border-color, color, box-shadow;
+    transition-timing-function: var(--nx-ease-out);
+    transition-duration: 160ms;
+  }
+
+  [data-slot="button"]:not(:disabled):not([aria-disabled="true"]):active,
+  .nx-cta:not(:disabled):active {
+    transform: scale(0.97);
+  }
+
+  :focus-visible {
+    outline-color: var(--nx-blue);
+  }
+}
+
+/* Pantallas de acceso: el halo azul del hero de nxtec.es y una tarjeta de cristal. */
+.nx-auth {
+  background:
+    radial-gradient(55% 45% at 86% 0%, var(--nx-halo-1), transparent 70%),
+    radial-gradient(45% 55% at 0% 100%, var(--nx-halo-2), transparent 70%),
+    var(--cal-bg);
+}
+
+/* La rejilla de fondo del login de Cal sigue en el código (menos conflictos con upstream), pero no se ve. */
+.nx-auth > .pointer-events-none.absolute {
+  display: none;
+}
+
+.nx-card {
+  border-radius: 20px;
+  border: 1px solid var(--nx-card-border);
+  background: var(--nx-card-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Botón principal de acceso: píldora de 44 px, como los de nxtec.es. */
+.nx-cta {
+  min-height: 44px;
+  border-radius: 9999px;
+  border-color: transparent;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font-weight: 500;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nx-cta:not(:disabled):hover {
+    background: var(--nx-cta-hover);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-slot="button"]:active,
+  .nx-cta:active {
+    transform: none;
+  }
+}

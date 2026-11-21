@@ -26,6 +26,7 @@ describe("getThemeProviderProps", () => {
       key: expectedStorageKey,
       nonce: "test-nonce",
       enableColorScheme: false,
+      defaultTheme: "dark",
     };
 
     it("should return app theme configuration when not in booking page or embed mode", () => {
@@ -40,7 +41,7 @@ describe("getThemeProviderProps", () => {
       });
     });
 
-    it("should force light theme and no storageKey and system theme support is required when isThemeSupported is false", () => {
+    it("should force dark theme (NXTEC) and no storageKey and system theme support is required when isThemeSupported is false", () => {
       const result = getThemeProviderProps({
         ...fnArg,
         pathname: "/test",
@@ -54,7 +55,7 @@ describe("getThemeProviderProps", () => {
         ...appThemeExpectedProps,
         storageKey: "forcedThemeKey",
         key: "forcedThemeKey",
-        forcedTheme: "light",
+        forcedTheme: "dark",
         enableSystem: false,
       });
     });
@@ -82,6 +83,7 @@ describe("getThemeProviderProps", () => {
       attribute: "class",
       nonce: "test-nonce",
       enableColorScheme: false,
+      defaultTheme: "dark",
     };
 
     it("should handle booking page theme", () => {
@@ -129,6 +131,7 @@ describe("getThemeProviderProps", () => {
       attribute: "class",
       nonce: "test-nonce",
       enableColorScheme: false,
+      defaultTheme: "dark",
       enableSystem: true,
       forcedTheme: undefined,
     };
