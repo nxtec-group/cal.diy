@@ -9,9 +9,9 @@ import { APP_NAME } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 
 import { Button } from "../../components/button/Button";
-import { Logo } from "../../components/logo";
 import { StepCard } from "../../components/card/StepCard";
 import { Steps } from "../../components/form/step/Steps";
+import { Logo } from "../../components/logo";
 import { SkeletonText } from "../../components/skeleton/Skeleton";
 
 export function WizardLayout({

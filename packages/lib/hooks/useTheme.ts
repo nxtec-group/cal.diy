@@ -14,7 +14,7 @@ import { localStorage } from "@calcom/lib/webstorage";
 export default function useTheme(themeToSet: "system" | (string & {}) | undefined | null, getOnly = false) {
   if (typeof window !== "undefined") {
     const themeFromLocalStorage = localStorage.getItem("app-theme");
-    themeToSet = themeToSet ?? themeFromLocalStorage ?? "system";
+    themeToSet = themeToSet ?? themeFromLocalStorage ?? "dark"; // NXTEC: oscuro por defecto
   }
   const { resolvedTheme, setTheme, forcedTheme, theme: activeTheme } = useNextTheme();
   const embedTheme = useEmbedTheme();
