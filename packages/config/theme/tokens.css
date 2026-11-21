@@ -368,10 +368,10 @@
 
 .dark {
   /* Background Standard */
-  --cal-bg-emphasis: hsla(228, 7%, 24%, 1);
-  --cal-bg: hsla(225, 13%, 6%, 1);
-  --cal-bg-subtle: hsla(228, 9%, 16%, 1);
-  --cal-bg-muted: hsla(228, 9%, 13%, 1);
+  --cal-bg-emphasis: hsla(0, 0%, 25%, 1);
+  --cal-bg: hsla(0, 0%, 6%, 1);
+  --cal-bg-subtle: hsla(0, 0%, 15%, 1);
+  --cal-bg-muted: hsla(0, 0%, 9%, 1);
   --cal-bg-inverted: hsla(0, 0%, 98%, 1);
 
   /* Background Primary */
@@ -380,8 +380,8 @@
   --cal-bg-primary-muted: hsla(0, 0%, 15%, 1);
 
   /* Background Brand */
-  --cal-bg-brand: hsla(216, 100%, 65%, 1);
-  --cal-bg-brand-emphasis: hsla(214, 100%, 68%, 1);
+  --cal-bg-brand: hsla(0, 0%, 98%, 1);
+  --cal-bg-brand-emphasis: hsla(0, 0%, 96%, 1);
   --cal-bg-brand-muted: hsla(0, 0%, 96%, 1);
 
   /* Background Semantic */
@@ -419,9 +419,9 @@
   --cal-bg-launch-dark: hsla(242, 53%, 10%, 1);
 
   /* Border Standard */
-  --cal-border: hsla(228, 6%, 28%, 1);
-  --cal-border-muted: hsla(228, 9%, 13%, 1);
-  --cal-border-subtle: hsla(228, 8%, 18%, 1);
+  --cal-border: hsla(0, 0%, 30%, 1);
+  --cal-border-muted: hsla(0, 0%, 9%, 1);
+  --cal-border-subtle: hsla(0, 0%, 15%, 1);
   --cal-border-emphasis: hsla(0, 0%, 45%, 1);
   --cal-border-semantic-error: hsla(0, 63%, 24%, 1);
   --cal-border-semantic-attention-subtle: hsla(15, 75%, 23%, 1);

@@ -98,7 +98,7 @@ export function getThemeProviderProps({
   const themeQueryParam = searchParams?.get("theme") ?? "";
   const themeParsed = z.enum(["light", "dark", "system", "auto"]).safeParse(themeQueryParam);
   const isWrongThemeValue = themeQueryParam.length > 0 && !themeParsed.success;
-  const forcedTheme = themeSupport === ThemeSupport.None || isWrongThemeValue ? "light" : undefined;
+  const forcedTheme = themeSupport === ThemeSupport.None || isWrongThemeValue ? "dark" : undefined;
   if (forcedTheme) {
     return {
       key: "forcedThemeKey",
@@ -138,6 +138,8 @@ export function getThemeProviderProps({
     storageKey,
     nonce: props.nonce,
     enableColorScheme: false,
+    // NXTEC: sin preferencia guardada, oscuro (antes seguía al sistema).
+    defaultTheme: "dark",
     // Enables theme switching based on system preference if true
     enableSystem: themeSupport !== ThemeSupport.None,
     // next-themes doesn't listen to changes on storageKey. So we need to force a re-render when storageKey changes
