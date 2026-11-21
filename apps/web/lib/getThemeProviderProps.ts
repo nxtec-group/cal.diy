@@ -107,6 +107,7 @@ export function getThemeProviderProps({
       attribute: "class",
       nonce: props.nonce,
       enableColorScheme: false,
+      defaultTheme: "dark",
       enableSystem: themeSupport !== ThemeSupport.None,
     };
   }
