@@ -1,7 +1,7 @@
 {
-    "name": "Cal.diy",
-    "short_name": "Cal.diy",
-    "description": "Scheduling infrastructure for absolutely everyone.",
+    "name": "NXTEC Calendar",
+    "short_name": "NXTEC",
+    "description": "Reserva una llamada con NXTEC.",
     "icons": [
         {
             "src": "/api/logo?type=android-chrome-192",
@@ -14,8 +14,8 @@
             "type": "image/png"
         }
     ],
-    "theme_color": "#ffffff",
-    "background_color": "#ffffff",
+    "theme_color": "#0d0e11",
+    "background_color": "#0d0e11",
     "display_override": ["minimal-ui"],
     "display": "standalone",
     "scope": "/",
