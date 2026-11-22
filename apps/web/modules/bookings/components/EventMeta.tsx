@@ -143,7 +143,8 @@ export const EventMeta = ({
     : isHalfFull
       ? "text-yellow-500"
       : "text-bookinghighlight";
-  const userLocale = locale ?? navigator.language;
+  // NXTEC: el idioma de la página (español sin sesión), no el del navegador.
+  const userLocale = locale ?? i18n.language;
   const translatedDescription = getTranslatedField(
     event?.fieldTranslations ?? [],
     EventTypeAutoTranslatedField.DESCRIPTION,

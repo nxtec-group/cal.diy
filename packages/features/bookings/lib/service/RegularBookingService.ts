@@ -1,3 +1,4 @@
+import { NXTEC_VISITOR_LOCALE } from "@calcom/features/auth/lib/nxtecLocale";
 import process from "node:process";
 import processExternalId from "@calcom/app-store/_utils/calendars/processExternalId";
 import { getPaymentAppData } from "@calcom/app-store/_utils/payments/getPaymentAppData";
@@ -635,7 +636,8 @@ async function handler(
 
   const fullName = getFullName(bookerName);
   // Why are we only using "en" locale
-  const tGuests = await getTranslation("en", "common");
+  // NXTEC: los invitados reciben los correos en el idioma de quien reserva sin sesión (nxtecLocale.ts).
+  const tGuests = await getTranslation(NXTEC_VISITOR_LOCALE, "common");
 
   const dynamicUserList = Array.isArray(reqBody.user) ? reqBody.user : getUsernameList(reqBody.user);
   if (!eventType)
@@ -1254,7 +1256,7 @@ async function handler(
       firstName: "",
       lastName: "",
       timeZone: attendeeTimezone,
-      language: { translate: tGuests, locale: "en" },
+      language: { translate: tGuests, locale: NXTEC_VISITOR_LOCALE },
     });
     return guestArray;
   }, [] as Invitee);
