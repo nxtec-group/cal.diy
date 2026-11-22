@@ -31,6 +31,10 @@ env:
   APP_NAME: NXTEC
   SUPPORT_MAIL: angel.nxtec@gmail.com
   SENDER_NAME: NXTEC
+  # Enlaces legales del formulario de reserva («Al continuar, aceptas los Términos y la Política de privacidad de
+  # NXTEC»): sin ellos Cal.com apunta a cal.com/terms y cal.com/privacy.
+  TERMS_URL: https://nxtec.es/legal/aviso-legal/
+  PRIVACY_URL: https://nxtec.es/legal/privacidad/
   # Solo existen en CI: la BD desechable del servicio y los valores que exige `next build`.
   # Van como ARG de la etapa de compilación y no llegan a la imagen final (se comprueba abajo).
   CI_DATABASE_URL: postgresql://calcom:ci-only@localhost:5432/calendso
@@ -95,6 +99,8 @@ jobs:
             --build-arg NEXT_PUBLIC_APP_NAME="$APP_NAME" \
             --build-arg NEXT_PUBLIC_SUPPORT_MAIL_ADDRESS="$SUPPORT_MAIL" \
             --build-arg NEXT_PUBLIC_SENDGRID_SENDER_NAME="$SENDER_NAME" \
+            --build-arg NEXT_PUBLIC_WEBSITE_TERMS_URL="$TERMS_URL" \
+            --build-arg NEXT_PUBLIC_WEBSITE_PRIVACY_POLICY_URL="$PRIVACY_URL" \
             --build-arg CALCOM_TELEMETRY_DISABLED=1 \
             --build-arg DATABASE_URL="$CI_DATABASE_URL" \
             --build-arg NEXTAUTH_SECRET="$CI_BUILD_PLACEHOLDER" \
