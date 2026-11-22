@@ -3,6 +3,8 @@ import type { GetServerSidePropsContext, NextApiRequest } from "next";
 
 import { getServerSession } from "@calcom/features/auth/lib/getServerSession";
 
+import { NXTEC_VISITOR_LOCALE } from "./nxtecLocale";
+
 type Maybe<T> = T | null | undefined;
 
 const { i18n } = require("@calcom/i18n/next-i18next.config");
@@ -12,6 +14,8 @@ export async function getLocaleFromRequest(
 ): Promise<string> {
   const session = await getServerSession({ req });
   if (session?.user?.locale) return session.user.locale;
+  // NXTEC: sin sesión, siempre español (nxtecLocale.ts).
+  if (NXTEC_VISITOR_LOCALE) return NXTEC_VISITOR_LOCALE;
   let preferredLocale: string | null | undefined;
   if (req.headers["accept-language"]) {
     preferredLocale = parser.pick(i18n.locales, req.headers["accept-language"], {

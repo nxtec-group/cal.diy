@@ -5,6 +5,8 @@ import { getToken } from "next-auth/jwt";
 
 import { i18n } from "@calcom/i18n/next-i18next.config";
 
+import { NXTEC_VISITOR_LOCALE } from "./nxtecLocale";
+
 type ReadonlyHeaders = Awaited<ReturnType<typeof import("next/headers").headers>>;
 type ReadonlyRequestCookies = Awaited<ReturnType<typeof import("next/headers").cookies>>;
 
@@ -35,6 +37,11 @@ export const getLocale = async (
 
   if (tokenLocale) {
     return tokenLocale;
+  }
+
+  // NXTEC: sin sesión, siempre español (nxtecLocale.ts). El resto de la función queda como en upstream.
+  if (NXTEC_VISITOR_LOCALE) {
+    return NXTEC_VISITOR_LOCALE;
   }
 
   const acceptLanguage =
