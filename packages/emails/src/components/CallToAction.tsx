@@ -12,8 +12,8 @@ export const CallToAction = (props: {
   const calculatePadding = () => {
     const paddingTop = "0.625rem";
     const paddingBottom = "0.625rem";
-    let paddingLeft = "1rem";
-    let paddingRight = "1rem";
+    let paddingLeft = "1.25rem";
+    let paddingRight = "1.25rem";
 
     if (startIconName) {
       paddingLeft = "0.875rem";
@@ -31,10 +31,10 @@ export const CallToAction = (props: {
     <p
       style={{
         display: "inline-block",
-        background: secondary ? "#FFFFFF" : "#292929",
+        background: secondary ? "#FFFFFF" : "#0d0e11",
         border: secondary ? "1px solid #d1d5db" : "",
         color: "#ffffff",
-        fontFamily: "Roboto, Helvetica, sans-serif",
+        fontFamily: "Poppins, Helvetica, Arial, sans-serif",
         fontSize: "0.875rem",
         fontWeight: 500,
         lineHeight: "1rem",
@@ -45,14 +45,14 @@ export const CallToAction = (props: {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         msoPaddingAlt: "0px",
-        borderRadius: "6px",
+        borderRadius: "999px",
         boxSizing: "border-box",
         height: "2.25rem",
       }}>
       {/* @ts-expect-error shared props between href and button */}
       <El
         style={{
-          color: secondary ? "#292929" : "#FFFFFF",
+          color: secondary ? "#0d0e11" : "#FFFFFF",
           textDecoration: "none",
           display: "flex",
           alignItems: "center",
