@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-head-element */
 import BaseTable from "./BaseTable";
 import EmailBodyLogo from "./EmailBodyLogo";
-import EmailHeaderLogo from "./EmailHeaderLogo";
 import EmailHead from "./EmailHead";
+import EmailHeaderLogo from "./EmailHeaderLogo";
 import EmailScheduledBodyHeaderContent from "./EmailScheduledBodyHeaderContent";
 import EmailSchedulingBodyDivider from "./EmailSchedulingBodyDivider";
 import EmailSchedulingBodyHeader, { BodyHeadType } from "./EmailSchedulingBodyHeader";
@@ -23,6 +23,7 @@ export const V2BaseEmailHtml = (props: {
   title?: string;
   subtitle?: React.ReactNode;
   headerType?: BodyHeadType;
+  hideLogo?: boolean;
 }) => {
   return (
     <Html>
@@ -48,7 +49,7 @@ export const V2BaseEmailHtml = (props: {
               </td>
             </Row>
           </div>
-          <EmailHeaderLogo />
+          {!props.hideLogo && <EmailHeaderLogo />}
           {props.headerType && <EmailSchedulingBodyHeader headerType={props.headerType} />}
           {props.title && <EmailScheduledBodyHeaderContent title={props.title} subtitle={props.subtitle} />}
           {(props.headerType || props.title || props.subtitle) && <EmailSchedulingBodyDivider />}
@@ -184,7 +185,7 @@ export const V2BaseEmailHtml = (props: {
               </td>
             </Row>
           </div>
-          <EmailBodyLogo />
+          {!props.hideLogo && <EmailBodyLogo />}
           <RawHtml html="<!--[if mso | IE]></td></tr></table><![endif]-->" />
         </div>
       </body>

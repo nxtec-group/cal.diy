@@ -48,7 +48,14 @@ const EmailBodyLogo = () => {
                       <tr>
                         <td align="left" valign="middle" style={{ padding: "24px 0 0", textAlign: "left" }}>
                           <NxtecLogoPlate width={88} height={18} />
-                          <p style={{ margin: "8px 0 0 8px", fontFamily: FONT, fontSize: "12px", lineHeight: "18px", color: "#6B7280" }}>
+                          <p
+                            style={{
+                              margin: "8px 0 0 8px",
+                              fontFamily: FONT,
+                              fontSize: "12px",
+                              lineHeight: "18px",
+                              color: "#6B7280",
+                            }}>
                             Tech Solutions
                           </p>
                         </td>
@@ -57,14 +64,27 @@ const EmailBodyLogo = () => {
                             href="https://nxtec.es"
                             target="_blank"
                             rel="noreferrer"
-                            style={{ fontFamily: FONT, fontSize: "13px", lineHeight: "20px", color: "#3E3E3E", textDecoration: "none" }}>
+                            style={{
+                              fontFamily: FONT,
+                              fontSize: "13px",
+                              lineHeight: "20px",
+                              color: "#3E3E3E",
+                              textDecoration: "none",
+                            }}>
                             nxtec.es
                           </a>
                         </td>
                       </tr>
                       <tr>
                         <td colSpan={2} align="center" style={{ padding: "20px 0 8px", textAlign: "center" }}>
-                          <p style={{ margin: 0, fontFamily: FONT, fontSize: "12px", lineHeight: "18px", color: "#6B7280" }}>
+                          <p
+                            style={{
+                              margin: 0,
+                              fontFamily: FONT,
+                              fontSize: "12px",
+                              lineHeight: "18px",
+                              color: "#6B7280",
+                            }}>
                             © {new Date().getFullYear()} NXTEC
                           </p>
                         </td>

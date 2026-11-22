@@ -25,8 +25,7 @@ const EmailSchedulingBodyHeader = (props: { headerType: BodyHeadType; headStyles
 
   return (
     <>
-      <EmailCommonDivider
-        headStyles={{ padding: "30px 30px 0 30px", borderTop: "0", ...props.headStyles }}>
+      <EmailCommonDivider headStyles={{ padding: "30px 30px 0 30px", borderTop: "0", ...props.headStyles }}>
         <td
           align="center"
           style={{

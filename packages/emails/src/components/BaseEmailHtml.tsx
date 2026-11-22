@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-head-element */
 import BaseTable from "./BaseTable";
 import EmailBodyLogo from "./EmailBodyLogo";
-import EmailHeaderLogo from "./EmailHeaderLogo";
 import EmailHead from "./EmailHead";
+import EmailHeaderLogo from "./EmailHeaderLogo";
 import EmailScheduledBodyHeaderContent from "./EmailScheduledBodyHeaderContent";
 import EmailSchedulingBodyDivider from "./EmailSchedulingBodyDivider";
 import type { BodyHeadType } from "./EmailSchedulingBodyHeader";
