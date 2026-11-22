@@ -1,13 +1,12 @@
-import { WEBAPP_URL } from "@calcom/lib/constants";
-
+import { NxtecLogoPlate } from "./EmailHeaderLogo";
 import RawHtml from "./RawHtml";
 import Row from "./Row";
+
+const FONT = "Poppins, Helvetica, Arial, sans-serif";
 
 const CommentIE = ({ html = "" }) => <RawHtml html={`<!--[if mso | IE]>${html}<![endif]-->`} />;
 
 const EmailBodyLogo = () => {
-  const image = `${WEBAPP_URL}/emails/logo.png`;
-
   return (
     <>
       <CommentIE
@@ -35,36 +34,43 @@ const EmailBodyLogo = () => {
                 verticalAlign: "top",
                 width: "100%",
               }}>
+              {/* NXTEC · Carta: pie con filete, logo y lema a la izquierda, la web a la derecha y el © debajo. */}
               <Row border="0" style={{ verticalAlign: "top" }} width="100%">
-                <td
-                  align="center"
-                  style={{
-                    fontSize: "0px",
-                    padding: "10px 25px",
-                    paddingTop: "32px",
-                    wordBreak: "break-word",
-                  }}>
-                  <Row border="0" style={{ borderCollapse: "collapse", borderSpacing: "0px" }}>
-                    <td style={{ width: "89px" }}>
-                      <a href={WEBAPP_URL} target="_blank" rel="noreferrer">
-                        <img
-                          height="19"
-                          src={image}
-                          style={{
-                            border: "0",
-                            display: "block",
-                            outline: "none",
-                            textDecoration: "none",
-                            height: "19px",
-                            width: "100%",
-                            fontSize: "13px",
-                          }}
-                          width="89"
-                          alt=""
-                        />
-                      </a>
-                    </td>
-                  </Row>
+                <td style={{ padding: "32px 25px 0", wordBreak: "break-word" }}>
+                  <table
+                    role="presentation"
+                    cellPadding="0"
+                    cellSpacing="0"
+                    border={0}
+                    width="100%"
+                    style={{ width: "100%", borderTop: "1px solid #E5E7EB" }}>
+                    <tbody>
+                      <tr>
+                        <td align="left" valign="middle" style={{ padding: "24px 0 0", textAlign: "left" }}>
+                          <NxtecLogoPlate width={88} height={18} />
+                          <p style={{ margin: "8px 0 0 8px", fontFamily: FONT, fontSize: "12px", lineHeight: "18px", color: "#6B7280" }}>
+                            Tech Solutions
+                          </p>
+                        </td>
+                        <td align="right" valign="middle" style={{ padding: "24px 0 0", textAlign: "right" }}>
+                          <a
+                            href="https://nxtec.es"
+                            target="_blank"
+                            rel="noreferrer"
+                            style={{ fontFamily: FONT, fontSize: "13px", lineHeight: "20px", color: "#3E3E3E", textDecoration: "none" }}>
+                            nxtec.es
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colSpan={2} align="center" style={{ padding: "20px 0 8px", textAlign: "center" }}>
+                          <p style={{ margin: 0, fontFamily: FONT, fontSize: "12px", lineHeight: "18px", color: "#6B7280" }}>
+                            © {new Date().getFullYear()} NXTEC
+                          </p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </td>
               </Row>
             </div>

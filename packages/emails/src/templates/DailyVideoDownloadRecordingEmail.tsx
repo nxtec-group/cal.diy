@@ -1,6 +1,6 @@
 import type { TFunction } from "i18next";
 
-import { WEBAPP_URL, APP_NAME, COMPANY_NAME } from "@calcom/lib/constants";
+import { APP_NAME, COMPANY_NAME } from "@calcom/lib/constants";
 
 import { V2BaseEmailHtml, CallToAction } from "../components";
 
@@ -15,32 +15,12 @@ interface DailyVideoDownloadRecordingEmailProps {
 export const DailyVideoDownloadRecordingEmail = (
   props: DailyVideoDownloadRecordingEmailProps & Partial<React.ComponentProps<typeof V2BaseEmailHtml>>
 ) => {
-  const image = `${WEBAPP_URL}/emails/logo.png`;
   return (
     <V2BaseEmailHtml
       subject={props.language("download_your_recording", {
         title: props.title,
         date: props.date,
       })}>
-      <div style={{ width: "89px", marginBottom: "35px" }}>
-        <a href={WEBAPP_URL} target="_blank" rel="noreferrer">
-          <img
-            height="19"
-            src={image}
-            style={{
-              border: "0",
-              display: "block",
-              outline: "none",
-              textDecoration: "none",
-              height: "19px",
-              width: "100%",
-              fontSize: "13px",
-            }}
-            width="89"
-            alt=""
-          />
-        </a>
-      </div>
       <p
         style={{
           fontSize: "32px",

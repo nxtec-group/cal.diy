@@ -10,6 +10,7 @@ const EmailHead = ({ title = "" }) => {
       />
       <meta httpEquiv="Content-Type" content="text/html; charset=UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <meta name="color-scheme" content="light" />
       <style type="text/css">
         {`
           #outlook a {
@@ -50,8 +51,8 @@ const EmailHead = ({ title = "" }) => {
         html={`<!--[if lte mso 11]><style type="text/css">.mj-outlook-group-fix { width:100% !important; }</style><![endif]-->`}
       />
       <RawHtml
-        html={`<!--[if !mso]><!--><link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700" rel="stylesheet" type="text/css"/>
-      <style type="text/css">@import url(https://fonts.googleapis.com/css?family=Roboto:400,500,700);</style><!--<![endif]-->`}
+        html={`<!--[if !mso]><!--><link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600" rel="stylesheet" type="text/css"/>
+      <style type="text/css">@import url(https://fonts.googleapis.com/css?family=Poppins:400,500,600);</style><!--<![endif]-->`}
       />
       <style type="text/css">
         {`
