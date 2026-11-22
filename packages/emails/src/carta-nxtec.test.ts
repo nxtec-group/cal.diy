@@ -6,7 +6,7 @@ import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
 import type { TFunction } from "i18next";
-import { beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
 import type { CalendarEvent, Person } from "@calcom/types/Calendar";
 
@@ -51,7 +51,10 @@ const CASOS: Array<[string, () => Promise<string>]> = [
   ["reserva-confirmada", () => renderEmail("AttendeeScheduledEmail", { calEvent, attendee })],
   ["reserva-organizador", () => renderEmail("OrganizerScheduledEmail", { calEvent, attendee: organizer })],
   ["reserva-cancelada", () => renderEmail("AttendeeCancelledEmail", { calEvent, attendee })],
-  ["recordatorio-pendiente", () => renderEmail("OrganizerRequestReminderEmail", { calEvent, attendee: organizer })],
+  [
+    "recordatorio-pendiente",
+    () => renderEmail("OrganizerRequestReminderEmail", { calEvent, attendee: organizer }),
+  ],
   [
     "contrasena",
     () =>
@@ -67,12 +70,14 @@ describe("Carta NXTEC", () => {
   const html: Record<string, string> = {};
 
   beforeAll(async () => {
-    process.env.CALENDSO_ENCRYPTION_KEY ||= "0123456789abcdef0123456789abcdef";
+    // OrganizerRequestEmail cifra el enlace de aprobación: una clave de prueba, restaurada al terminar.
+    vi.stubEnv("CALENDSO_ENCRYPTION_KEY", "0123456789abcdef0123456789abcdef");
     for (const [nombre, render] of CASOS) html[nombre] = await render();
     const out = process.env.NXTEC_CARTA_OUT;
     if (out) {
       mkdirSync(out, { recursive: true });
-      for (const [nombre, contenido] of Object.entries(html)) writeFileSync(path.join(out, `${nombre}.html`), contenido);
+      for (const [nombre, contenido] of Object.entries(html))
+        writeFileSync(path.join(out, `${nombre}.html`), contenido);
     }
   });
 
@@ -87,6 +92,19 @@ describe("Carta NXTEC", () => {
     // Sin la fuente ni el gris de fondo de Cal.
     expect(h).not.toContain("Roboto");
     expect(h).not.toContain("#F3F4F6");
+  });
+
+  afterAll(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("con hideBranding no salen ni el logo de arriba ni el pie", async () => {
+    const h = await renderEmail("AttendeeScheduledEmail", {
+      calEvent: { ...calEvent, hideBranding: true } as CalendarEvent,
+      attendee,
+    });
+    expect(h).not.toContain("/emails/logo.png");
+    expect(h).not.toContain("https://nxtec.es");
   });
 
   it.each(CASOS.map(([nombre]) => nombre))("%s tiene los comentarios de Outlook equilibrados", (nombre) => {
